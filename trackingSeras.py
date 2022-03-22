@@ -23,8 +23,16 @@ dependes = [
     "Já tentou fazer isso com javascript?",
     "Sempre dependenderá da complexidade. Então, depende",
     "Depende de muitos dependes",
-    "Existem muitos dependes para analisar."
-
+    "Existem muitos dependes para analisar.",
+    "depends",
+    "maybe",
+    "depends on the complexity",
+    "i need to analyse better, so it depends",
+    "too many variables, depends",
+    "depends on your approach",
+    "as always, depends.",
+    "have you tried with javascript?",
+    "depends on a lot of maybes"
 ]
 
 
