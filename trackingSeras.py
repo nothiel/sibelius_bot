@@ -40,7 +40,9 @@ class RetweetListener(tweepy.StreamListener):
         tweetId = tweet.id
         if msg != None:
             print(msg)
-        if tweet.is_quote_status == False & tweet.favorited == False & tweet.retweeted == False:
+        if tweet.is_quote_status == False & tweet.favorited == False:
+            # aqui existe um bug... Se alguem retuitar um tweet que o bot ja curtiu/comentou, ele passa por essa verificação.
+            # não chega a quebrar o app, só registra no log com warning. logo mais descubro como resolver
             try:
 
                 tweet.favorite()
