@@ -1,14 +1,14 @@
 import tweepy
 import logging
-import env
+from os import getenv
 
-logger = logging.getLogger()
+logger = logging.getLogger("SibeliusBot")
 
 
 def create_api():
 
-    auth = tweepy.OAuthHandler(env.consumer_key, env.consumer_secret)
-    auth.set_access_token(env.access_token, env.access_token_secret)
+    auth = tweepy.OAuthHandler(getenv('CONSUMER_KEY'), getenv('CONSUMER_SECRET'))
+    auth.set_access_token(getenv('ACCESS_TOKEN'), getenv('ACCESS_TOKEN_SECRET'))
     api = tweepy.API(auth, wait_on_rate_limit=True,
                      wait_on_rate_limit_notify=True)
     try:
