@@ -1,0 +1,13 @@
+version: "3.9"
+   
+services:
+  sbot:
+    build: .
+    env_file:
+      - ./.env
+    volumes:
+      - .:/app
+    command: python tracking_seras.py
+    stdin_open: true
+    tty: true
+
