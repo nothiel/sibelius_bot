@@ -1,13 +1,10 @@
 import tweepy
 import logging
 from api import create_api
-from datetime import datetime
 import random
 logging.basicConfig(filename="relatorioDeMerdas.log", level=logging.INFO)
-logger = logging.getLogger()
-tweetId = ""
-now = datetime.now()
-current_time = now.strftime("%H:%M:%S")
+logger = logging.getLogger('SibeliusBot')
+
 dependes = [
     "depende...",
     "Depende...",
@@ -40,13 +37,13 @@ class RetweetListener(tweepy.StreamListener):
     def __init__(self, api):
         self.api = api
         self.me = api.me()
+        self.tweet_id = ''
 
     def on_status(self, tweet):
-        index = random.randint(0, len(dependes))
-        processing = 'Processando tweet - {}'.format(tweet.text)
+        processing = f'Processando tweet - {tweet.text}'
         msg = logger.info(processing)
-        tweetId = tweet.id
-        if msg != None:
+        self.tweet_id = tweet.id
+        if msg:
             print(msg)
         if tweet.is_quote_status == False & tweet.favorited == False:
             # aqui existe um bug... Se alguem retuitar um tweet que o bot ja curtiu/comentou, ele passa por essa verificação.
@@ -55,29 +52,29 @@ class RetweetListener(tweepy.StreamListener):
 
                 tweet.favorite()
                 api.update_status(
-                    status=dependes[index], in_reply_to_status_id=tweetId, auto_populate_reply_metadata=True)
+                    status=random.choice(dependes), in_reply_to_status_id=self.tweet_id, auto_populate_reply_metadata=True)
                 logger.info({
                     "Status": "OK",
-                    "Tweet ID": tweetId,
-                    "Link": f"https://twitter.com/twitter/status/{tweetId}"
+                    "Tweet ID": self.tweet_id,
+                    "Link": f"https://twitter.com/twitter/status/{self.tweet_id}"
                 })
                 print(str({
                     "Status": "OK",
-                    "Tweet ID": tweetId,
-                    "Link": f"https://twitter.com/twitter/status/{tweetId}"
+                    "Tweet ID": self.tweet_id,
+                    "Link": f"https://twitter.com/twitter/status/{self.tweet_id}"
                 }))
             except tweepy.error.TweepError as error:
 
                 print(str({
                     "Status": "Warning",
-                    "Tweet ID": tweetId,
-                    "Link": f"https://twitter.com/twitter/status/{tweetId}",
+                    "Tweet ID": self.tweet_id,
+                    "Link": f"https://twitter.com/twitter/status/{self.tweet_id}",
                     "Error": str(error)
                 }))
                 logger.error({
                     "Status": "Warning",
-                    "Tweet ID": tweetId,
-                    "Link": f"https://twitter.com/twitter/status/{tweetId}",
+                    "Tweet ID": self.tweet_id,
+                    "Link": f"https://twitter.com/twitter/status/{self.tweet_id}",
                     "Error": str(error)
                 })
                 pass
@@ -90,24 +87,25 @@ class RetweetListener(tweepy.StreamListener):
             return False
 
 
-api = create_api()
-tweets_listener = RetweetListener(api)
-while True:
-    try:
-        stream = tweepy.Stream(auth=api.auth, listener=tweets_listener)
-        stream.filter(track=['cc: @sseraphini', 'cc:@sseraphini', 'cc @sseraphini',
-                      'Cc @sseraphini', 'Cc: @sseraphini', 'Cc:@sseraphini'])
-    except Exception as error:
-        print(str({
-            "Status": "Critical",
-            "Tweet ID": tweetId,
-            "Link": f"https://twitter.com/twitter/status/{tweetId}",
-            "Error": str(error)
-        }))
-        logger.error({
-            "Status": "Critical",
-            "Tweet ID": tweetId,
-            "Link": f"https://twitter.com/twitter/status/{tweetId}",
-            "Error": str(error)
-        })
-        pass
+if __name__ == '__main__':
+    api = create_api()
+    tweets_listener = RetweetListener(api)
+    while True:
+        try:
+            stream = tweepy.Stream(auth=api.auth, listener=tweets_listener)
+            stream.filter(track=['cc: @sseraphini', 'cc:@sseraphini', 'cc @sseraphini',
+                                 'Cc @sseraphini', 'Cc: @sseraphini', 'Cc:@sseraphini'])
+        except Exception as error:
+            print(str({
+                "Status": "Critical",
+                "Tweet ID": tweets_listener.tweet_id,
+                "Link": f"https://twitter.com/twitter/status/{tweets_listener.tweet_id}",
+                "Error": str(error)
+            }))
+            logger.error({
+                "Status": "Critical",
+                "Tweet ID": tweets_listener.tweet_id,
+                "Link": f"https://twitter.com/twitter/status/{tweets_listener.tweet_id}",
+                "Error": str(error)
+            })
+            pass
