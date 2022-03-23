@@ -93,7 +93,7 @@ if __name__ == '__main__':
         try:
             stream = tweepy.Stream(auth=api.auth, listener=tweets_listener)
             stream.filter(track=['cc: @sseraphini', 'cc:@sseraphini', 'cc @sseraphini',
-                        'Cc @sseraphini', 'Cc: @sseraphini', 'Cc:@sseraphini'])
+                                 'Cc @sseraphini', 'Cc: @sseraphini', 'Cc:@sseraphini'])
         except Exception as error:
             print(str({
                 "Status": "Critical",
